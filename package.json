@@ -1,5 +1,6 @@
 {
-  "name": "my-app",
+  "name": "fire-extinguisher-checker-app",
+  "homepage": "https://ydnamjs.github.io/Fire-Extinguisher-Checker-Website/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
