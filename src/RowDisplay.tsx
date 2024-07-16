@@ -17,23 +17,26 @@ function MakeExpirationNoticeText(dateChecked: Date, daysLasts: number) {
 export function RowDisplay({
     index,
     error,
-    extinguisher
+    extinguisher,
+    daysLasts
 }:{
     index: number
     error: string
     extinguisher: Extinguisher
+    daysLasts: number
 }) {
     return <div className='row-display'>
         <h3> Extinguisher #{index}</h3>
         {error !== "" && <div>Errors: {error}</div>}
         {error === "" && <div>
-            <span>{MakeExpirationNoticeText(extinguisher.dateChecked, 365)}</span><br/>
+            <span>{MakeExpirationNoticeText(extinguisher.dateChecked, daysLasts)}</span><br/>
             <span>Region: {extinguisher.region}</span><br/>
             <span>Address: {extinguisher.address}</span><br/>
             <span>City: {extinguisher.city}</span><br/>
             <span>State: {extinguisher.state}</span><br/>
             <span>County: {extinguisher.county}</span><br/>
-            <span>Zipcode: {extinguisher.zipcode}</span>
+            <span>Zipcode: {extinguisher.zipcode}</span><br/>
+            <span>Last Checked: {extinguisher.dateChecked.toLocaleDateString('en-US', {timeZone: 'America/New_York'})}</span>
         </div>}
     </div>
 }

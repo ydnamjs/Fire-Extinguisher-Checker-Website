@@ -3,24 +3,24 @@ import { RowDisplay } from './RowDisplay';
 import { Extinguisher } from './ProcessSpreadSheet';
 import './RowDisplays.css'
 
-function IsExpired(dateChecked: Date, daysLasts: number): boolean {
+function GetDaysUntilExpiration(dateChecked: Date, daysLasts: number): number {
     const currentDate = new Date();
     console.log(dateChecked)
     console.log(currentDate.getTime())
     const difference = ((dateChecked.getTime() - currentDate.getTime()) / (1000 * 60 * 60 * 24)) + daysLasts;
-
-    if (difference < 0) {
-        return true
-    } 
-    return false
+    return difference
 }
 
 export function RowDisplays({
     errors, 
-    extinguishers
+    extinguishers,
+    extinguisherDuration,
+    noticeAmount
 }:{
     errors: string[]
     extinguishers: Extinguisher[]
+    extinguisherDuration: number
+    noticeAmount: number
 }) {
     
     const invalidRowDisplays = []
@@ -29,14 +29,17 @@ export function RowDisplays({
 
     for(let i = 1; i < errors.length; i++) {
         if (errors[i] !== "") {
-            invalidRowDisplays.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]}></RowDisplay>)
+            invalidRowDisplays.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]} daysLasts={extinguisherDuration}></RowDisplay>)
             continue;
         }
-        if (IsExpired(extinguishers[i].dateChecked, 365)) {
-            expiredExtinguishers.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]}></RowDisplay>)
+        if (GetDaysUntilExpiration(extinguishers[i].dateChecked, extinguisherDuration) < 0) {
+            expiredExtinguishers.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]} daysLasts={extinguisherDuration}></RowDisplay>)
             continue;
         }
-        soonToExpireExtinguishers.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]}></RowDisplay>)
+        if (GetDaysUntilExpiration(extinguishers[i].dateChecked, extinguisherDuration) < noticeAmount) {
+            soonToExpireExtinguishers.push(<RowDisplay index={i + 1} error={errors[i]} extinguisher={extinguishers[i]} daysLasts={extinguisherDuration}></RowDisplay>)
+            continue;
+        }
     }
     
     return <div>
